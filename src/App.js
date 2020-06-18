@@ -4,6 +4,11 @@ import { Query } from "react-apollo";
 import client from "./client";
 import { SEARCH_REPOSITORIES } from "./graphql";
 
+const StarButton = (props) => {
+  const totalCount = props.node.stargazers.totalCount;
+  return <button>{totalCount === 1 ? "1 star" : `${totalCount}stars`}</button>;
+};
+
 const PER_PAGE = 5;
 
 const DEFAULT_STATE = {
@@ -53,7 +58,6 @@ class App extends Component {
   }
   render() {
     const { query, first, last, before, after } = this.state;
-    console.log(query);
     return (
       <ApolloProvider client={client}>
         <form onSubmit={this.handleSubmit}>
@@ -70,7 +74,6 @@ class App extends Component {
 
             const search = data.search;
             const repositoryCount = search.repositoryCount;
-            console.log(search);
             const repositoryUnit =
               repositoryCount === 1 ? "Repository" : "Repositories";
             const title = `Github Repositories Search Results -
@@ -90,6 +93,8 @@ class App extends Component {
                         >
                           {node.name}
                         </a>
+                        &nbsp;
+                        <StarButton node={node} />
                       </li>
                     );
                   })}
